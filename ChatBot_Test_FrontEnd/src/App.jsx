@@ -6,6 +6,7 @@ function App() {
 
   const addMessage = async () => {
     const response = await sendMessage(newMessage)
+    document.getElementById('input').value = ''
     console.log(response)
     setMessages([...messages, newMessage, response])
     
@@ -16,7 +17,7 @@ function App() {
         { messages.map((message, key) => <div className="message" key={key}>{message}</div>) }
       </div>
       <div className="new-message">
-        <input type="text" onChange={(e) => {setNewMessage(e.target.value)}}/>
+        <input type="text" onChange={(e) => {setNewMessage(e.target.value)}} id='input'/>
         <button onClick={addMessage}>Send</button>
       </div>
     </div>
