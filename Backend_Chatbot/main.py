@@ -1,7 +1,11 @@
 import os
-os.environ["GOOGLE_CSE_ID"] = "AIzaSyCEcFcd-ZIsvVIeOHVHiN4fSijkC7i79-g"
-os.environ["GOOGLE_API_KEY"] = "614d5d9bedb1e43e6"
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_TYPE"] = "azure"
+os.environ["OPENAI_API_VERSION"] = "2022-12-01"
+os.environ["OPENAI_API_BASE"] = ""
+os.environ["OPENAI_API_KEY"] = ""
+os.environ["GOOGLE_CSE_ID"] = ""
+os.environ["GOOGLE_API_KEY"] = ""
+
 #main.py
 
 # Import the Flask module that has been installed.
@@ -16,7 +20,7 @@ from typing import List, Union
 from langchain.schema import AgentAction, AgentFinish
 import re
 # choosing lLM
-from langchain.llms import OpenAI
+from langchain.llms import AzureOpenAI
 
 # creating tool
 from langchain.utilities import GoogleSearchAPIWrapper
@@ -36,11 +40,8 @@ tools = [
 
 # Set up the base template
 template = """Answer the following questions as best you can, but speaking as a pirate might speak. You have access to the following tools:
-
 {tools}
-
 Use the following format:
-
 Question: the input question you must answer
 Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
@@ -49,9 +50,7 @@ Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat N times)
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question
-
 Begin! Remember to speak in portuguese
-
 Question: {input}
 {agent_scratchpad}"""
 
@@ -106,7 +105,7 @@ prompt = CustomPromptTemplate(
     # This includes the `intermediate_steps` variable because that is needed
     input_variables=["input", "intermediate_steps"]
 )
-llm = OpenAI(temperature=0.9)
+llm = AzureOpenAI(deployment_name="davinci", model_name="text-davinci-002")
 llm_chain = LLMChain(llm=llm, prompt=prompt)
 tool_names = [tool.name for tool in tools]
 output_parser = CustomOutputParser()
@@ -136,4 +135,3 @@ if __name__ == "__main__":
     # Runs the Flask application only if the main.py file is being run.
     app.run()
 
-    
